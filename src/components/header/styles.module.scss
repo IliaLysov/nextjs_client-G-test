@@ -1,0 +1,23 @@
+@import '@/app/main';
+
+.wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+}
+
+.logo {
+    font-size: $averageFont;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+// .side {
+//     display: flex;
+//     align-items: center;
+// }
+
+// .navigation {
+//     margin-right: 40px;
+// }
