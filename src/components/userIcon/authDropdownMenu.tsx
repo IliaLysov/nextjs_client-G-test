@@ -14,6 +14,7 @@ export default function AuthDropdownMenu({menuRef, setMenuStatus}: {menuRef: Rea
     return (
         <div className={styles.menu} ref={menuRef}>
             <Link href='/user' className={styles.menuItem} onClick={() => setMenuStatus(false)}>Профиль</Link>
+            <Link href='/user/settings' className={styles.menuItem} onClick={() => setMenuStatus(false)}>Настройки</Link>
             <div className={styles.menuItem} onClick={() => {dispatch(logOutPost()); setMenuStatus(false)}}>Выйти</div>
         </div>
     )

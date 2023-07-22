@@ -1,0 +1,30 @@
+@import '@/app/main';
+
+.mainLayout {
+    width: 100%;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.items {
+    width: 400px;
+    display: grid;
+    grid-template-columns: [col-start] repeat(2, 1fr) [col-end];
+    grid-auto-rows: minmax(100px, auto);
+    gap: 20px;
+}
+
+.item {
+    text-decoration: none;
+    border: 1px solid $grey;
+    font-size: $averageFont;
+    border-radius: $standartBorderRadius;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

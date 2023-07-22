@@ -1,3 +1,5 @@
+import { cartItemInterface } from "./cart"
+
 export interface LogInInterface {
     email: string
     password: string
@@ -7,6 +9,7 @@ export interface RegistrationInterface {
     name: string
     email: string
     password: string
+    cart?: cartItemInterface[]
 }
 
 export enum AuthorizationEnum {
@@ -23,4 +26,11 @@ export interface UserInterface {
     surname?: string
     isActivated?: boolean,
     seller?: boolean,
+    avatar?: {
+        Bucket: string,
+        ETag: string,
+        Key: string,
+        Location: string
+    }
+    cart?: cartItemInterface[]
 }

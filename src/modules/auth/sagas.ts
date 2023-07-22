@@ -1,9 +1,11 @@
-import {call, takeEvery, put} from 'redux-saga/effects'
-import { logInPost, registrationPost, checkAuth, logOutPost } from './sagaActions'
+import {call, takeEvery, put, select} from 'redux-saga/effects'
+import { logInPost, registrationPost, checkAuth, logOutPost, uploadAvatar, addToCardPost } from './sagaActions'
 import {AuthService} from '@/services'
-import { setAuthErrorMessage, setUser, setPending } from './'
-import { setModal } from '../common'
+import { setAuthErrorMessage, setUser, setauthPending } from './'
+import { cartSelector, setModal } from '../common'
 import { ModalTypeEnum } from '@/types/modal'
+import { UserInterface } from '@/types/auth'
+import { cartItemInterface } from '@/types/cart'
 
 function* logInSaga(action: ReturnType<typeof logInPost>): Generator {
     try {
@@ -20,7 +22,8 @@ function* logInSaga(action: ReturnType<typeof logInPost>): Generator {
 function* registrationSaga(action: ReturnType<typeof registrationPost>): Generator {
     try {
         const {email, password, name} = action.payload
-        let response: any = yield call(AuthService.registration, {email, password, name})
+        const cart: any = yield select(cartSelector)
+        let response: any = yield call(AuthService.registration, {email, password, name, cart})
         localStorage.setItem('token', response.data.accessToken)
         yield put(setUser({auth: true, ...response.data.user}))
         yield put(setModal({status: false, type: ModalTypeEnum.Empty}))
@@ -31,17 +34,22 @@ function* registrationSaga(action: ReturnType<typeof registrationPost>): Generat
 
 function* checkAuthSaga(): Generator {
     try {
-        if(localStorage.getItem('token')) {
+        // yield put(setauthPending(true))
+        yield put(setModal({status: true, type: ModalTypeEnum.Loading}))
+        const token = yield call(() => {
+            return localStorage.getItem('token')
+        })
+        
+        if(token) {
             const response: any = yield call(AuthService.checkAuth)
             localStorage.setItem('token', response.data.accessToken)
             yield put(setUser({auth: true, ...response.data.user}))
-            console.log(response)
         }
     } catch(e: any) {
         console.log(e)
     } finally {
-        yield put(setPending(false))
         yield put(setModal({status: false, type: ModalTypeEnum.Empty}))
+        yield put(setauthPending(false))
     }
 }
 
@@ -56,9 +64,32 @@ function* logOutSaga(): Generator {
     }
 }
 
+function* uploadAvatarSaga(action: ReturnType<typeof uploadAvatar>): Generator {
+    try {
+        const formData: FormData = action.payload
+        const response: any = yield call(AuthService.uploadAvatar, formData)
+        yield put(setUser({auth: true, ...response.data}))
+    } catch(e: any) {
+        console.log(e)
+    }
+}
+
+function* addToCardPostSaga(action: ReturnType<typeof addToCardPost>): Generator {
+    try {
+        const itemsArray: cartItemInterface[] = action.payload
+        const response: any = yield call(AuthService.addToCart, itemsArray)
+        const user = response.data
+        yield put(setUser({auth: true, ...user}))
+    } catch (e: any) {
+        console.log('addToCardPostSaga', e)
+    }
+}
+
 export function* authSaga() {
     yield takeEvery(logInPost.type, logInSaga)
     yield takeEvery(registrationPost.type, registrationSaga)
     yield takeEvery(checkAuth.type, checkAuthSaga)
     yield takeEvery(logOutPost.type, logOutSaga)
+    yield takeEvery(uploadAvatar.type, uploadAvatarSaga)
+    yield takeEvery(addToCardPost.type, addToCardPostSaga)
 }

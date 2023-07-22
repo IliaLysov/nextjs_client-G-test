@@ -1,11 +1,29 @@
-type Props = {
-    params: {
-        id: string
-    }
-}
+'use client'
 
-export default function Item({params: {id}}: Props) {
+import styles from './page.module.scss'
+import { useAppDispatch, useAppSelector } from '@/hooks/redux'
+import { productSelector, oneProductGet } from '@/modules'
+import { useEffect } from 'react'
+
+export default function Item({params: {id}}: {params: {id: string}}) {
+    const dispatch = useAppDispatch()
+    const item = useAppSelector(productSelector)
+
+    useEffect(() => {
+        if (!item) {
+            const arr = id.split('-')
+            const currentId = arr.pop()
+            if (typeof currentId === 'string') {
+                dispatch(oneProductGet(currentId))
+            }
+        }
+    }, [])
+
+
     return (
-        <h1>Item page {id}</h1>
+        <div className={styles.wrapper}>
+            <h1>Item page</h1>
+            <h2>{item?.name}</h2>
+        </div>
     )
 }

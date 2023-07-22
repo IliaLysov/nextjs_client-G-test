@@ -1,9 +1,12 @@
+import styles from './page.module.scss'
+
+
 export default function CatalogLayout({
     children,
   }: {
     children: React.ReactNode
   }) {
     return (
-      <div>{children}</div>
+      <div className={styles.catalogLayout}>{children}</div>
     )
   }

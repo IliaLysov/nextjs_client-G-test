@@ -13,6 +13,7 @@
     z-index: $modal;
     background-color: $lightGreyTransparent;
     backdrop-filter: blur(5px);
+    // overflow-x:scroll;
 }
 
 .content {

@@ -1,5 +1,6 @@
 import $api from "@/api";
 import { LogInInterface, RegistrationInterface } from "@/types/auth";
+import { cartItemInterface } from "@/types/cart";
 
 
 export default class AuthService {
@@ -7,8 +8,8 @@ export default class AuthService {
         return await $api.post('/auth/login', {email, password})
     }
 
-    static async registration({email, password, name}: RegistrationInterface) {
-        return await $api.post('/auth/registration', {email, password, name, surname: 'test'})
+    static async registration({email, password, name, cart}: RegistrationInterface) {
+        return await $api.post('/auth/registration', {email, password, name, surname: 'test', cart })
     }
 
     static async checkAuth() {
@@ -17,5 +18,13 @@ export default class AuthService {
 
     static async logOut() {
         return await $api.post('/auth/logout')
+    }
+
+    static async uploadAvatar(data: FormData) {
+        return await $api.post('/auth/avatar',  data, {headers: {'Content-Type': "multipart/form-data"}})
+    }
+
+    static async addToCart(array: cartItemInterface[]) {
+        return await $api.post('/auth/addToCart', array)
     }
 }

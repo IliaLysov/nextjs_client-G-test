@@ -19,7 +19,7 @@ export default function UserIcon() {
 
     const [menuStatus, setMenuStatus] = useState(false)
 
-    const auth = useAppSelector(userSelector).auth
+    const user = useAppSelector(userSelector)
 
     const menuRef = useRef<HTMLDivElement>(null)
     const userRef = useRef<HTMLDivElement>(null)
@@ -39,7 +39,7 @@ export default function UserIcon() {
     }
 
     const menu = () => {
-        if (auth) {
+        if (user.auth) {
             return <AuthDropdownMenu menuRef={menuRef} setMenuStatus={setMenuStatus}/>
         } else {
             return <NotAuthDropdownMenu menuRef={menuRef} modalHandler={modalHandler}/>
@@ -49,7 +49,18 @@ export default function UserIcon() {
     return (
         <div className={styles.wrapper}>
             <div className={styles.user} onClick={() => setMenuStatus(!menuStatus)} ref={userRef}>
-                <Image src={userImg} alt="user" className={styles.userImg} loading='eager'/>
+                <div className={styles.imgWrapper}>
+                    {
+                        user.auth ?
+                        user?.avatar?.Location ?
+                        <img src={user.avatar.Location} alt="user" className={styles.userImg}/>
+                        :
+                        <div className={styles.sellerFirstLetter}>{user?.name?.charAt(0)}</div>
+                        :
+                        <Image src={userImg} alt="user" className={styles.userImg} height='100' width='100' priority={true} loading='eager'/>
+                    }
+                </div>
+                <div className={styles.name}>{user?.name}</div>
             </div>
             {menuStatus && menu()}
         </div>

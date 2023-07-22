@@ -1,12 +1,12 @@
 @import '@/app/main';
 
 * {
-    color: $graphite;
+    color: black;
     box-sizing: border-box;
 }
 
 body {
-    margin: 0 40px;
+    margin: 0;
 }
 
 h1, h2, h3, h4, h5, h6, p {
@@ -19,4 +19,8 @@ h1 {
 
 h2 {
     margin-bottom: 10px;
+}
+
+li {
+    list-style: none;
 }

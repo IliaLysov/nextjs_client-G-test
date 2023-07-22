@@ -1,13 +1,17 @@
 import './globals.scss'
-import { Inter, Roboto_Condensed } from 'next/font/google'
+import { Metadata } from 'next'
+import { Inter, Roboto_Condensed, Open_Sans, Poiret_One } from 'next/font/google'
 import {Header, Footer, ModalWindow} from '@/components'
 import ReduxProvider from '@/redux/provider'
 import Main from '@/redux/main'
-// const inter = Inter({ subsets: ['latin'] })
+import styles from './layout.module.scss'
 
-const roboto = Roboto_Condensed({weight: '400', subsets: ['latin']})
+// const poiret = Poiret_One({weight: '400', subsets: ['cyrillic']})
+// const sans = Open_Sans({subsets: ['cyrillic']})
+const inter = Inter({ subsets: ['cyrillic'] })
+// const roboto = Roboto_Condensed({weight: '400', subsets: ['latin']})
 
-export const metadata = {
+export const metadata: Metadata  = {
   title: 'Gardener',
   description: 'Питомник растений',
 }
@@ -19,7 +23,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-        <body className={roboto.className}>
+        <body className={inter.className}>
           <ReduxProvider>
             <Main>
               <Header />
