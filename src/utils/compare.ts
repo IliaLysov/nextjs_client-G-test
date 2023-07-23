@@ -23,3 +23,20 @@ export const cartComparison = (arr1: cartItemInterface[], arr2: cartItemInterfac
     // Step 4: Arrays are equal
     return true;
   }
+
+  export const stringArrayComparison = (arr1: string[], arr2: string[]) => {
+    // Step 1: Check if arrays have the same length
+    if (arr1.length !== arr2.length) {
+      return false;
+    }
+  
+    // Step 2: Compare each element
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] !== arr2[i]) {
+        return false;
+      }
+    }
+  
+    // If all elements are equal, return true
+    return true;
+  }

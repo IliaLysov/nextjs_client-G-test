@@ -8,8 +8,8 @@ export default class AuthService {
         return await $api.post('/auth/login', {email, password})
     }
 
-    static async registration({email, password, name, cart}: RegistrationInterface) {
-        return await $api.post('/auth/registration', {email, password, name, surname: 'test', cart })
+    static async registration({email, password, name, cart, favorite}: RegistrationInterface) {
+        return await $api.post('/auth/registration', {email, password, name, surname: 'test', cart, favorite})
     }
 
     static async checkAuth() {
@@ -26,5 +26,9 @@ export default class AuthService {
 
     static async addToCart(array: cartItemInterface[]) {
         return await $api.post('/auth/addToCart', array)
+    }
+
+    static async addToFavorite(array: string[]) {
+        return await $api.post('/auth/addToFavorite', array)
     }
 }

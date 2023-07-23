@@ -3,6 +3,7 @@ import styles from './styles.module.scss'
 import Link from 'next/link'
 import Image from 'next/image'
 import Cart from '@/icons/Cart.svg'
+import Favorites from '@/icons/Like.svg'
 
 
 export default function NavIcon({nav, count}: {nav: string, count: number}) {
@@ -11,6 +12,9 @@ export default function NavIcon({nav, count}: {nav: string, count: number}) {
     switch (nav) {
         case 'cart':
             img = Cart
+            break;
+        case 'favorites':
+            img = Favorites
             break;
         default:
             break;

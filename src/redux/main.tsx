@@ -4,9 +4,9 @@ import { useEffect } from "react"
 import { addToCardPost, checkAuth } from "@/modules/auth"
 import { useAppDispatch, useAppSelector } from "@/hooks/redux"
 import { setauthPending } from "@/modules/auth"
-import { cartSelector, setCart, userSelector } from "@/modules"
+import { cartSelector, favoriteSelector, setCart, setFavorite, userSelector } from "@/modules"
 import { cartItemInterface } from "@/types/cart"
-import { cartComparison } from "@/utils/compare"
+import { cartComparison, stringArrayComparison } from "@/utils/compare"
 
 export default function Main({
     children,
@@ -17,6 +17,7 @@ export default function Main({
 
     const user = useAppSelector(userSelector)
     const cart = useAppSelector(cartSelector)
+    const favorite = useAppSelector(favoriteSelector)
     
     useEffect(() => {
       // dispatch(setauthPending(true))
@@ -30,9 +31,16 @@ export default function Main({
           const comparison = cartComparison(userCart, cart)
           !comparison && dispatch(setCart(userCart))
         }
+        if (user.favorite) {
+          const userFavorite: string[] = user.favorite
+          const comparison = stringArrayComparison(userFavorite, favorite)
+          !comparison && dispatch(setFavorite(userFavorite))
+        }
       } else {
         const localCart: any = localStorage.getItem('localCart')
         localCart && dispatch(setCart(JSON.parse(localCart)))
+        const localFavorite: any = localStorage.getItem('localFavorite')
+        localFavorite && dispatch(setFavorite(JSON.parse(localFavorite)))
       }
     }, [user.auth])
 

@@ -10,6 +10,7 @@ export interface RegistrationInterface {
     email: string
     password: string
     cart?: cartItemInterface[]
+    favorite?: string[]
 }
 
 export enum AuthorizationEnum {
@@ -32,5 +33,6 @@ export interface UserInterface {
         Key: string,
         Location: string
     }
-    cart?: cartItemInterface[]
+    cart?: cartItemInterface[],
+    favorite?: string[]
 }

@@ -4,3 +4,4 @@ import { cartItemInterface } from '@/types/cart'
 
 export const setModal = createAction<ModalInterface>('SET_MODAL')
 export const setCart = createAction<cartItemInterface[]>('SET_CART')
+export const setFavorite = createAction<string[]>('SET_FAVORITE')

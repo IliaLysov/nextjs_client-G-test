@@ -11,3 +11,4 @@ export const logOutPost = createAction('LOG_OUT_POST')
 export const uploadAvatar = createAction<FormData>('UPLOAD_AVATAR')
 
 export const addToCardPost = createAction<cartItemInterface[]>('ADD_TO_CARD_POST')
+export const addToFavoritePost = createAction<string[]>('ADD_TO_FAVORITE_POST')

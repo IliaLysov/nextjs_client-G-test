@@ -3,9 +3,10 @@
 import styles from './styles.module.scss'
 // import { useAppDispatch, useAppSelector } from '@/hooks/redux'
 import Like from '@/icons/Like.svg'
+import filledLike from '@/icons/filledLike.svg'
 import Image from 'next/image'
 
-export default function Item({item, profile, handleCart, inCart}: {item: any, profile: any, handleCart: any, inCart: boolean}) {
+export default function Item({item, profile, handleCart, inCart, handleFavorite, inFavorite}: {item: any, profile: any, handleCart: any, inCart: boolean, handleFavorite: any, inFavorite: boolean}) {
 
 
     return (
@@ -14,8 +15,13 @@ export default function Item({item, profile, handleCart, inCart}: {item: any, pr
                 {item.images[0]?.Location &&
                 <div className={styles.imageWrapper}>
                     <img src={item.images[0].Location} alt="plant" className={styles.image} />
-                    <div className={styles.favorite} onClick={e => e.stopPropagation()}>
-                        <Image priority src={Like} alt='like' className={styles.like}/>
+                    <div className={styles.favorite} onClick={e => {e.stopPropagation(); handleFavorite(item)}}>
+                        {
+                            inFavorite ?
+                            <Image priority src={filledLike} alt='like' className={styles.like}/>
+                            :
+                            <Image priority src={Like} alt='like' className={styles.like}/>
+                        }
                     </div>
                     <div className={styles.sellerAvatarWrapper} onClick={e => {e.stopPropagation(); profile(item.sellerName)}}>
                         {

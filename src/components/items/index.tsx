@@ -3,13 +3,13 @@
 import styles from './styles.module.scss'
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/hooks/redux'
-import { allProductsGet, productsSelector, setProducts, setProduct, ownProductsGet, setModal, modalSelector, userSelector, setCart, cartSelector, addToCardPost } from '@/modules'
+import { allProductsGet, productsSelector, setProducts, setProduct, ownProductsGet, setModal, modalSelector, userSelector, setCart, cartSelector, addToCardPost, favoriteSelector, setFavorite, addToFavoritePost } from '@/modules'
 import { useRouter } from 'next/navigation'
 import { ProductOwnerTypeEnum } from '@/types/product'
 import { ModalTypeEnum } from '@/types/modal'
 import { Item } from '@/components'
 import { cartItemInterface } from '@/types/cart'
-import { cartComparison } from '@/utils/compare'
+import { cartComparison, stringArrayComparison } from '@/utils/compare'
 
 export default function Items({type}: {type: string}) {
     const router = useRouter()
@@ -33,7 +33,8 @@ export default function Items({type}: {type: string}) {
     let modal = useAppSelector(modalSelector)
     const user = useAppSelector(userSelector)
     const cart = useAppSelector(cartSelector)
-    
+    const favorite = useAppSelector(favoriteSelector)
+        
     useEffect(() => {
         items.length === 0 && dispatch(get({skip: 0, filter: {}, sort: {}}))
         return () => {
@@ -42,6 +43,7 @@ export default function Items({type}: {type: string}) {
     }, [])
 
     useEffect(() => {
+        items.length === 0 ? setItems(newItems) :
         limit > items.length && items.length % initialLimit === 0 && setItems([...items, ...newItems])
 
     }, [newItems])
@@ -73,47 +75,41 @@ export default function Items({type}: {type: string}) {
     }
 
     const handleCart = (item: any) => {
+        const existance = cart.some((obj: cartItemInterface) => obj.id === item._id)
+        const newCart = existance ? cart.filter(el => el.id !== item._id) : [...cart, {id: item._id, count: 1}]
+        dispatch(setCart(newCart))
         if (user.auth) {
-            const existance = cart.some((obj: cartItemInterface) => obj.id === item._id)
-
-            if (!existance) {
-                const newCart = [...cart, {id: item._id, count: 1}]
-                dispatch(setCart(newCart))
-                if (user.cart) {
-                    const userCart: cartItemInterface[] = user.cart
-                    const comparison = cartComparison(userCart, newCart)
-                    !comparison && dispatch(addToCardPost(newCart))
-                } else {
-                    dispatch(addToCardPost(newCart))
-                }
+            if (user.cart) {
+                const userCart: cartItemInterface[] = user.cart
+                const comparison = cartComparison(userCart, newCart)
+                !comparison && dispatch(addToCardPost(newCart))
             } else {
-                const newCart = cart.filter(el => el.id !== item._id)
-                dispatch(setCart(newCart))
-                if (user.cart) {
-                    const userCart: cartItemInterface[] = user.cart
-                    const comparison = cartComparison(userCart, newCart)
-                    !comparison && dispatch(addToCardPost(newCart))
-                } else {
-                    dispatch(addToCardPost(newCart))
-                }
+                dispatch(addToCardPost(newCart))
             }
-
         } else {
-            const existance = cart.some((obj: cartItemInterface) => obj.id === item._id)
-
-            if (!existance) {
-                const newCart = [...cart, {id: item._id, count: 1}]
-                dispatch(setCart(newCart))
-                const localCart = JSON.stringify(newCart)
-                localStorage.setItem('localCart', localCart)
-            } else {
-                const newCart = cart.filter(el => el.id !== item._id)
-                dispatch(setCart(newCart))
-                const localCart = JSON.stringify(newCart)
-                localStorage.setItem('localCart', localCart)
-            }
+            dispatch(setCart(newCart))
+            const localCart = JSON.stringify(newCart)
+            localStorage.setItem('localCart', localCart)
         }
+    }
 
+    const handleFavorite = (item: any) => {
+        const existance = favorite.some((id: string) => id === item._id)
+        const newFavorite = existance ? favorite.filter(el => el !== item._id) : [...favorite, item._id]
+        dispatch(setFavorite(newFavorite))
+        if (user.auth) {
+            if (user.favorite) {
+                const userFavorite: string[] = user.favorite
+                const comparison = stringArrayComparison(userFavorite, newFavorite)
+                !comparison && dispatch(addToFavoritePost(newFavorite))
+            } else {
+                dispatch(addToFavoritePost(newFavorite))
+            }
+        } else {
+            dispatch(setFavorite(newFavorite))
+            const localFavorite = JSON.stringify(newFavorite)
+            localStorage.setItem('localFavorite', localFavorite)
+        }
     }
 
     return (
@@ -121,9 +117,10 @@ export default function Items({type}: {type: string}) {
             <div className={styles.items}>
                 {type === ProductOwnerTypeEnum.Owner && <div className={styles.item} onClick={() => dispatch(setModal({status: true, type: ModalTypeEnum.ItemForm}))}>+</div>}
                 {items.map((item: any, idx: number) => {
-                    const existance = cart.some((obj: cartItemInterface) => obj.id === item._id)
+                    const cartExistance = cart.some((obj: cartItemInterface) => obj.id === item._id)
+                    const favoriteExistance = favorite.includes(item._id)
                     return <li key={idx} onClick={() => linkTo(item)}>
-                        <Item item={item} profile={moveToProfile} handleCart={handleCart} inCart={existance}/>
+                        <Item item={item} profile={moveToProfile} handleCart={handleCart} inCart={cartExistance} handleFavorite={handleFavorite} inFavorite={favoriteExistance}/>
                     </li>})}
             </div>
             {items.length === limit && <button onClick={() => showMore()}>Больше</button>}
