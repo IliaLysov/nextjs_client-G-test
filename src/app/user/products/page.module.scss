@@ -1,10 +1,11 @@
 @import '@/app/main';
 
 .wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    padding: 0 40px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    column-gap: 30px;
 }
 
 .items {

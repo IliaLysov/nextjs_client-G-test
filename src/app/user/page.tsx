@@ -7,7 +7,6 @@ import { userSelector } from '@/modules'
 
 export default function User() {
     const user = useAppSelector(userSelector)
-    console.log(user)
 
     return (
         <div className={styles.wrapper}>

@@ -1,10 +1,9 @@
 @import '@/app/main';
 
-.catalogLayout {
-    width: 100%;
-}
-
 .wrapper {
+    padding: 0 40px;
     width: 100%;
-    // background-color: grey;
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    column-gap: 30px;
 }

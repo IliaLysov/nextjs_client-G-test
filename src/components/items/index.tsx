@@ -3,13 +3,16 @@
 import styles from './styles.module.scss'
 import { useEffect, useState } from 'react'
 import { useAppDispatch, useAppSelector } from '@/hooks/redux'
-import { allProductsGet, productsSelector, setProducts, setProduct, ownProductsGet, setModal, modalSelector, userSelector, setCart, cartSelector, addToCardPost, favoriteSelector, setFavorite, addToFavoritePost } from '@/modules'
+import { allProductsGet, productsSelector, setProducts, setProduct, ownProductsGet, setModal, modalSelector, userSelector, setCart, cartSelector, addToCardPost, favoriteSelector, setFavorite, addToFavoritePost, filtersSelector, appliedFiltersSelector, setAppliedFilters } from '@/modules'
 import { useRouter } from 'next/navigation'
 import { ProductOwnerTypeEnum } from '@/types/product'
 import { ModalTypeEnum } from '@/types/modal'
 import { Item } from '@/components'
 import { cartItemInterface } from '@/types/cart'
-import { cartComparison, stringArrayComparison } from '@/utils/compare'
+import { cartComparison, compareObjects, stringArrayComparison } from '@/utils/compare'
+import { Filters } from '@/components'
+import { FiltersInterface } from '@/types/filter'
+
 
 export default function Items({type}: {type: string}) {
     const router = useRouter()
@@ -34,9 +37,45 @@ export default function Items({type}: {type: string}) {
     const user = useAppSelector(userSelector)
     const cart = useAppSelector(cartSelector)
     const favorite = useAppSelector(favoriteSelector)
+
+    //filters-----------------------------------------------
+
+    const initialFilters: FiltersInterface | null = useAppSelector(filtersSelector)
+    const appliedFilters: FiltersInterface | null = useAppSelector(appliedFiltersSelector)
+    const [newFilters, setNewFilters] = useState<FiltersInterface | null>(null)
+
+    useEffect(() => {
+        if (appliedFilters) {
+            setNewFilters(appliedFilters)
+        } else {
+            if (initialFilters) {
+                setNewFilters(initialFilters)
+                dispatch(setAppliedFilters(initialFilters))
+            }
+        }
+    }, [initialFilters])
+
+    const updateItemsByFilters = () => {
+        dispatch(get({skip: 0, appliedFilters: newFilters, sort: {}}))
+    }
+
+    const resetFilters = () => {
+        dispatch(get({skip: 0, appliedFilters: null, sort: {}}))
+        initialFilters && dispatch(setAppliedFilters(null))
+        if (initialFilters) {
+            setNewFilters(initialFilters)
+        }
+    }
+
+    useEffect(() => {
+        setLimit(initialLimit)
+        setItems(newItems)
+    }, [appliedFilters])
+
+    //-----------------------------------------------
         
     useEffect(() => {
-        items.length === 0 && dispatch(get({skip: 0, filter: {}, sort: {}}))
+        items.length === 0 && dispatch(get({skip: 0, appliedFilters: null, sort: {}}))
         return () => {
             dispatch(setProducts([]))
         }
@@ -46,14 +85,20 @@ export default function Items({type}: {type: string}) {
         items.length === 0 ? setItems(newItems) :
         limit > items.length && items.length % initialLimit === 0 && setItems([...items, ...newItems])
 
+        // limit > items.length && items.length % initialLimit === 0 ? setItems([...items, ...newItems]) :
+        // setItems(newItems)
+
     }, [newItems])
+
+    // console.log('newItems in items', newItems)
+    // console.log('items in items', items)
 
     useEffect(() => {
         setItems(newItems)
     }, [modal])
 
     const showMore = () => {
-        dispatch(get({skip: limit, filter: {}, sort: {}}))
+        dispatch(get({skip: limit, appliedFilters: appliedFilters, sort: {}}))
         setLimit(prev => items.length === limit ? prev + initialLimit : prev)
     }
 
@@ -114,6 +159,7 @@ export default function Items({type}: {type: string}) {
 
     return (
         <>
+            {initialFilters && newFilters && <Filters filters={initialFilters} newFilters={newFilters} setNewFilters={setNewFilters} update={updateItemsByFilters} appliedFilters={appliedFilters} resetFilters={resetFilters}/>}
             <div className={styles.items}>
                 {type === ProductOwnerTypeEnum.Owner && <div className={styles.item} onClick={() => dispatch(setModal({status: true, type: ModalTypeEnum.ItemForm}))}>+</div>}
                 {items.map((item: any, idx: number) => {
@@ -122,8 +168,8 @@ export default function Items({type}: {type: string}) {
                     return <li key={idx} onClick={() => linkTo(item)}>
                         <Item item={item} profile={moveToProfile} handleCart={handleCart} inCart={cartExistance} handleFavorite={handleFavorite} inFavorite={favoriteExistance}/>
                     </li>})}
+                {items.length === limit && <button onClick={() => showMore()}>Больше</button>}
             </div>
-            {items.length === limit && <button onClick={() => showMore()}>Больше</button>}
         </>
     )
 }

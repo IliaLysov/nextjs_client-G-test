@@ -7,6 +7,8 @@ export default function CatalogLayout({
     children: React.ReactNode
   }) {
     return (
-      <div className={styles.catalogLayout}>{children}</div>
+      <div className={styles.catalogLayout}>
+        {children}
+      </div>
     )
   }

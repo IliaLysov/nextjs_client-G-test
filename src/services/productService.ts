@@ -5,12 +5,12 @@ export default class ProductsService {
         return await $api.post('/products/upload', data, {headers: {'Content-Type': "multipart/form-data"}})
     }
 
-    static async getAll(skip: number, filter: any, sort: any) {
-        return await $api.post('/products/all', {skip, filter, sort})
+    static async getAll(skip: number, appliedFilters: any, sort: any) {
+        return await $api.post('/products/all', {skip, appliedFilters, sort})
     }
 
-    static async getOwn(skip: number, filter: any, sort: any) {
-        return await $api.post('/products/own', {skip, filter, sort})
+    static async getOwn(skip: number, appliedFilters: any, sort: any) {
+        return await $api.post('/products/own', {skip, appliedFilters, sort})
     }
 
     static async deleteOne(id: string) {

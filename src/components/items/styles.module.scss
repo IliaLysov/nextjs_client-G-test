@@ -4,7 +4,7 @@
 .items {
     width: 100%;
     display: grid;
-    grid-template-columns: [col-start] repeat(3, 1fr) [col-end];
+    grid-template-columns: [col-start] repeat(2, 1fr) [col-end];
     // grid-auto-rows: minmax(100px, auto);
     // gap: 20px;
     column-gap: 30px;

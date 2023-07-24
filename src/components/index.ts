@@ -9,6 +9,7 @@ import { FormikAutocomplete, FormikField } from './formik'
 import Items from './items'
 import Item from './item'
 import NavIcon from './navIcon'
+import Filters from './filters'
 
 export {
     Header,
@@ -23,5 +24,6 @@ export {
     FormikField,
     Items,
     Item,
-    NavIcon
+    NavIcon,
+    Filters
 }

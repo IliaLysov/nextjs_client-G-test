@@ -35,7 +35,6 @@ function* registrationSaga(action: ReturnType<typeof registrationPost>): Generat
 
 function* checkAuthSaga(): Generator {
     try {
-        // yield put(setauthPending(true))
         yield put(setModal({status: true, type: ModalTypeEnum.Loading}))
         const token = yield call(() => {
             return localStorage.getItem('token')
@@ -56,8 +55,7 @@ function* checkAuthSaga(): Generator {
 
 function* logOutSaga(): Generator {
     try {
-        const response: any = yield call(AuthService.logOut)
-        console.log(response)
+        yield call(AuthService.logOut)
         localStorage.removeItem('token')
         yield put(setUser({auth: false}))
     } catch(e: any) {

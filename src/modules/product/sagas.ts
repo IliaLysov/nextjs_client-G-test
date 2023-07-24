@@ -1,17 +1,18 @@
 import { call, takeEvery, put } from 'redux-saga/effects'
 import { productPost, ownProductsGet, deleteProductPost, updateProductPost, allProductsGet, oneProductGet, manyProductsGet } from './sagaActions'
 import { ProductsService } from '@/services'
-import { setProducts, setProduct, setCartProducts } from './actions'
+import { setProducts, setProduct, setCartProducts, setFilters, setAppliedFilters } from './actions'
 import { ProductInterface, ProductType } from '@/types/product'
 import { setModal } from '../common'
 import { ModalTypeEnum } from '@/types/modal'
 import { cartItemInterface } from '@/types/cart'
+import { FiltersInterface } from '@/types/filter'
 
 function* productPostSaga(action: ReturnType<typeof productPost>): Generator {
     try {
         const data = action.payload
         const response = yield call(ProductsService.uploadOne, data)
-        yield put(ownProductsGet({skip: 0, filter: {}, sort: {}}))
+        yield put(ownProductsGet({skip: 0, appliedFilters: null, sort: {}}))
         yield put(setModal({status: true, type: ModalTypeEnum.Success, data: 'Товар успешно добавлен'}))
     } catch(e: any) {
         yield put(setModal({status: true, type: ModalTypeEnum.Error, data: 'Не удалось добавить товар'}))
@@ -22,10 +23,16 @@ function* productPostSaga(action: ReturnType<typeof productPost>): Generator {
 
 function* ownProductsGetSaga(action: ReturnType<typeof ownProductsGet>): Generator {
     try {
-        const {skip, filter, sort} = action.payload
-        const response: any = yield call(ProductsService.getOwn, skip, filter, sort)
-        const products: ProductInterface[] = response.data
+        const {skip, appliedFilters, sort} = action.payload
+        const response: any = yield call(ProductsService.getOwn, skip, appliedFilters, sort)
+        const products: ProductInterface[] = response.data.products
+        console.log('products saga', products)
+        const filters: FiltersInterface = response.data.filters
         yield put(setProducts(products))
+        yield put(setFilters(filters))
+        if (appliedFilters) {
+            yield put(setAppliedFilters(appliedFilters))
+        }
     } catch (e: any) {
         console.log('product ownProductsGetSaga', e)
         console.log('product ownProductsGetSaga', e.response?.data?.message)
@@ -34,10 +41,15 @@ function* ownProductsGetSaga(action: ReturnType<typeof ownProductsGet>): Generat
 
 function* allProductsGetSaga(action: ReturnType<typeof allProductsGet>): Generator {
     try {
-        const {skip, filter, sort} = action.payload
-        const response: any = yield call(ProductsService.getAll, skip, filter, sort)
-        const products: ProductInterface[] = response.data
+        const {skip, appliedFilters, sort} = action.payload
+        const response: any = yield call(ProductsService.getAll, skip, appliedFilters, sort)
+        const products: ProductInterface[] = response.data.products
+        const filters: FiltersInterface = response.data.filters
         yield put(setProducts(products))
+        yield put(setFilters(filters))
+        if (appliedFilters) {
+            yield put(setAppliedFilters(appliedFilters))
+        }
     } catch (e: any) {
         console.log('product allProductsGetSaga', e)
         console.log('product allProductsGetSaga', e.response?.data?.message)
@@ -48,7 +60,7 @@ function* deleteProductPostSaga(action: ReturnType<typeof deleteProductPost>): G
     try {
         const id = action.payload
         yield call(ProductsService.deleteOne, id)
-        yield put(ownProductsGet({skip: 0, filter: {}, sort: {}}))
+        yield put(ownProductsGet({skip: 0, appliedFilters: null, sort: {}}))
         yield put(setModal({status: true, type: ModalTypeEnum.Success, data: 'Товар успешно удален'}))
     } catch (e: any) {
         yield put(setModal({status: true, type: ModalTypeEnum.Error, data: 'Не удалось удалить товар'}))
@@ -61,7 +73,7 @@ function* updateProductPostSaga(action: ReturnType<typeof updateProductPost>): G
     try {
         const data = action.payload
         const response = yield call(ProductsService.updateOne, data)
-        yield put(ownProductsGet({skip: 0, filter: {}, sort: {}}))
+        yield put(ownProductsGet({skip: 0, appliedFilters: null, sort: {}}))
         yield put(setModal({status: true, type: ModalTypeEnum.Success, data: 'Товар успешно обновлен'}))
     } catch (e: any) {
         yield put(setModal({status: true, type: ModalTypeEnum.Error, data: 'Не удалось обновить товар'}))
