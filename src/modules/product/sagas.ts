@@ -26,7 +26,6 @@ function* ownProductsGetSaga(action: ReturnType<typeof ownProductsGet>): Generat
         const {skip, appliedFilters, sort} = action.payload
         const response: any = yield call(ProductsService.getOwn, skip, appliedFilters, sort)
         const products: ProductInterface[] = response.data.products
-        console.log('products saga', products)
         const filters: FiltersInterface = response.data.filters
         yield put(setProducts(products))
         yield put(setFilters(filters))

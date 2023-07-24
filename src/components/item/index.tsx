@@ -38,7 +38,8 @@ export default function Item({item, profile, handleCart, inCart, handleFavorite,
             </div>
             <div className={[styles.orderWrapper, inCart && styles.active].join(' ')}  onClick={e => {e.stopPropagation(); inCart && handleCart(item)}}>
                 <div className={styles.price}>{`${item.price} ₽`}</div>
-                <button className={styles.button} onClick={() => {!inCart && handleCart(item)}}></button>
+                {/* <button className={styles.button} onClick={() => {!inCart && handleCart(item)}}></button> */}
+                <button className={[styles.button, inCart && styles.active].join(' ')} onClick={() => {!inCart && handleCart(item)}}></button>
             </div>
         </div>
     )
