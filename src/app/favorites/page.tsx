@@ -24,7 +24,7 @@ export default function Favorites() {
                 dispatch(manyProductsGet(idArray))
             }
         }
-    }, [])
+    }, [user.auth])
 
     const products = useAppSelector(cartProductSelector)
 

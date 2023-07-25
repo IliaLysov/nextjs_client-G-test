@@ -27,7 +27,7 @@ export default function Cart() {
                 dispatch(manyProductsGet(idArray))
             }
         }
-    }, [])
+    }, [user.auth])
 
     const products = useAppSelector(cartProductSelector)
 
