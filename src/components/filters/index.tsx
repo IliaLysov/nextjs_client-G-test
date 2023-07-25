@@ -5,7 +5,7 @@ import { FiltersInterface, PriceInterface } from '@/types/filter'
 import { FiltersNameEnum } from '@/types/filter'
 import { compareObjects } from '@/utils/compare'
 
-export default function Filters({filters, newFilters, setNewFilters, update, appliedFilters, resetFilters}: {filters: FiltersInterface, newFilters: FiltersInterface, setNewFilters: Dispatch<SetStateAction<FiltersInterface | null>>, update: any, appliedFilters: FiltersInterface | null, resetFilters: any}) {
+export default function Filters({filters, newFilters, setNewFilters, update, appliedFilters, resetFilters, filterTab}: {filters: FiltersInterface, newFilters: FiltersInterface, setNewFilters: Dispatch<SetStateAction<FiltersInterface | null>>, update: any, appliedFilters: FiltersInterface | null, resetFilters: any, filterTab: boolean}) {
 
     const newFilterComparison = compareObjects(newFilters, appliedFilters)
     const filterComparison = compareObjects(filters, appliedFilters)
@@ -18,11 +18,15 @@ export default function Filters({filters, newFilters, setNewFilters, update, app
 
 
     return (
-        <div className={styles.wrapper}>
-            {newFilters.price && <CustomSlider title='Цена' min={filters.price.min} max={filters.price.max} label={FiltersNameEnum.price} value={newFilters.price} setNewFilters={setNewFilters} />}
+        <div className={[styles.wrapper, filterTab && styles.active].join(' ')}>
+            <div className={styles.container}>
+                {newFilters.price && <CustomSlider title='Цена' min={filters.price.min} max={filters.price.max} label={FiltersNameEnum.price} value={newFilters.price} setNewFilters={setNewFilters} />}
 
-            {!newFilterComparison && <button className={styles.applyBtn} onClick={() => update()}>Применить фильтр</button>}
-            {!filterComparison && <button className={styles.applyBtn} onClick={() => resetFilters()}>Сбросить фильтр</button>}
+                {/* {!newFilterComparison && <button className={[styles.filterBtn, !newFilterComparison && styles.active].join(' ')} onClick={() => update()}>Применить фильтр</button>}
+                {!filterComparison && <button className={[styles.filterBtn, !filterComparison && styles.active].join(' ')} onClick={() => resetFilters()}>Сбросить фильтр</button>} */}
+                <button className={[styles.filterBtn, !newFilterComparison && styles.active].join(' ')} onClick={() => !newFilterComparison && update()}>Применить фильтр</button>
+                <button className={[styles.filterBtn, !filterComparison && styles.active].join(' ')} onClick={() => !filterComparison && resetFilters()}>Сбросить фильтр</button>
+            </div>
         </div>
     )
 }

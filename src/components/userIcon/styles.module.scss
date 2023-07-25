@@ -11,8 +11,7 @@
 }
 
 .imgWrapper {
-    height: 32px;
-    width: 32px;
+
     border-radius: 50%;
     border: .5px solid $someGrey;
     display: flex;
@@ -26,11 +25,9 @@
 }
 
 .userImg {
-    height: 26px;
-    width: 26px;
-    border-radius: 50%;
-    border: .5px solid $someGrey;
-    
+    height: 28px;
+    width: 28px;
+    border-radius: 50%;    
 }
 
 .sellerFirstLetter {

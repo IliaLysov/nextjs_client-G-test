@@ -1,12 +1,92 @@
 @import '@/app/main';
 
+.top {
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    user-select: none;
+}
+
+.topBtn {
+    font-size: $smallFont;
+    font-weight: 700;
+    height: 30px;
+    padding: 0 20px;
+    border: .5px solid $someGrey;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    padding-bottom: 1px;
+    cursor: pointer;
+    transition: background-color .3s;
+
+    &.active {
+        background-color: $someGrey;
+    }
+}
+
+.wrapper {
+    width: 100%;
+    display: flex;
+}
+
+.container {
+    flex: 1;
+
+}
+
 
 .items {
-    width: 100%;
     display: grid;
-    grid-template-columns: [col-start] repeat(2, 1fr) [col-end];
-    // grid-auto-rows: minmax(100px, auto);
-    // gap: 20px;
+    grid-template-columns: [col-start] repeat(5, 1fr) [col-end];
+
     column-gap: 30px;
     row-gap: 40px;
+
+    margin-bottom: 20px;
+
+    @include desktop1520 {
+        grid-template-columns: [col-start] repeat(4, 1fr) [col-end];
+    }
+
+    @include desktop1180 {
+        grid-template-columns: [col-start] repeat(3, 1fr) [col-end];
+    }
+
+    @include desktop960 {
+        grid-template-columns: [col-start] repeat(2, 1fr) [col-end];
+    }
+
+    @include tablets740 {
+        grid-template-columns: [col-start] repeat(1, 1fr) [col-end];
+    }
+}
+
+.moreBtn {
+    all: unset;
+    width: 100%;
+    height: 30px;
+    border-radius: 15px;
+    box-sizing: border-box;
+    padding-bottom: 1px;
+    cursor: pointer;
+    color: $graphite;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 700;
+    font-size: $smallFont;
+
+    border: .5px solid $lightGrey;
+
+    transition: background-color .3s;
+    background-color: $lightGrey;
+
+    &:hover {
+        background-color: white;
+    }
 }

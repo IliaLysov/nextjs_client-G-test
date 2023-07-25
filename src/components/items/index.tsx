@@ -20,6 +20,7 @@ export default function Items({type}: {type: string}) {
     const [items, setItems] = useState<any[]>([])
     const [limit, setLimit] = useState<number>(initialLimit)
     const dispatch: any = useAppDispatch()
+    const [filterTab, setFilterTab] = useState<boolean>(false)
 
     let get: any
 
@@ -159,16 +160,24 @@ export default function Items({type}: {type: string}) {
 
     return (
         <>
-            {initialFilters && newFilters && <Filters filters={initialFilters} newFilters={newFilters} setNewFilters={setNewFilters} update={updateItemsByFilters} appliedFilters={appliedFilters} resetFilters={resetFilters}/>}
-            <div className={styles.items}>
-                {type === ProductOwnerTypeEnum.Owner && <div className={styles.item} onClick={() => dispatch(setModal({status: true, type: ModalTypeEnum.ItemForm}))}>+</div>}
-                {items.map((item: any, idx: number) => {
-                    const cartExistance = cart.some((obj: cartItemInterface) => obj.id === item._id)
-                    const favoriteExistance = favorite.includes(item._id)
-                    return <li key={idx} onClick={() => linkTo(item)}>
-                        <Item item={item} profile={moveToProfile} handleCart={handleCart} inCart={cartExistance} handleFavorite={handleFavorite} inFavorite={favoriteExistance}/>
-                    </li>})}
-                {items.length === limit && <button onClick={() => showMore()}>Больше</button>}
+            <div className={styles.top}>
+                <div className={[styles.topBtn, filterTab && styles.active].join(' ')} onClick={() => setFilterTab(prev => !prev)}>Фильтры</div>
+                <div className={styles.topBtn}>Сортировать по</div>
+            </div>
+            <div className={styles.wrapper}>
+                {initialFilters && newFilters && <Filters filters={initialFilters} newFilters={newFilters} setNewFilters={setNewFilters} update={updateItemsByFilters} appliedFilters={appliedFilters} resetFilters={resetFilters} filterTab={filterTab}/>}
+                <div className={styles.container}>
+                    <div className={styles.items}>
+                        {type === ProductOwnerTypeEnum.Owner && <div className={styles.item} onClick={() => dispatch(setModal({status: true, type: ModalTypeEnum.ItemForm}))}>+</div>}
+                        {items.map((item: any, idx: number) => {
+                            const cartExistance = cart.some((obj: cartItemInterface) => obj.id === item._id)
+                            const favoriteExistance = favorite.includes(item._id)
+                            return <li key={idx} onClick={() => linkTo(item)}>
+                                <Item item={item} profile={moveToProfile} handleCart={handleCart} inCart={cartExistance} handleFavorite={handleFavorite} inFavorite={favoriteExistance}/>
+                            </li>})}
+                    </div>
+                    {items.length === limit && <button className={styles.moreBtn} onClick={() => showMore()}>Загрузить еще</button>}
+                </div>
             </div>
         </>
     )

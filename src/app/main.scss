@@ -21,3 +21,12 @@ $modal: 1000;
 
 //rediuses
 $standartBorderRadius: 5px;
+
+//breakpoints
+$desktop1520: 1520px;
+$desktop1180: 1180px;
+$desktop960: 960px;
+$tablets740: 740px;
+$phones480: 480px;
+
+@import "./media.scss";

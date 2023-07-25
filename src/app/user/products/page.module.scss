@@ -2,27 +2,4 @@
 
 .wrapper {
     padding: 0 40px;
-    width: 100%;
-    display: grid;
-    grid-template-columns: 220px 1fr;
-    column-gap: 30px;
-}
-
-.items {
-    width: 100%;
-    display: grid;
-    grid-template-columns: [col-start] repeat(2, 1fr) [col-end];
-    grid-auto-rows: minmax(100px, auto);
-    gap: 20px;
-}
-
-.item {
-    text-decoration: none;
-    border: 1px solid $grey;
-    font-size: $averageFont;
-    border-radius: $standartBorderRadius;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
 }

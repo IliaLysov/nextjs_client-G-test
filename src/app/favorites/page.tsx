@@ -18,7 +18,7 @@ export default function Favorites() {
             }
 
         } else {
-            const stringItemsArray = localStorage.getItem('localCart')
+            const stringItemsArray = localStorage.getItem('localFavorite')
             if (stringItemsArray) {
                 const idArray = JSON.parse(stringItemsArray)
                 dispatch(manyProductsGet(idArray))

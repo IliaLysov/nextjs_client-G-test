@@ -19,7 +19,7 @@ export default function Header() {
 
     return (
         <header className={styles.wrapper}>
-            <Link href='/' className={styles.logo}>GARDENER</Link>
+            <Link href='/' className={styles.logo}>PlantStore</Link>
             <nav className={styles.navigation}>
                 <Navigation link={{href: '/', name: 'Главная'}}/>
                 <Navigation link={{href: '/catalog', name: 'Каталог'}}/>

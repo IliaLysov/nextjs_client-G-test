@@ -1,12 +1,31 @@
 @import '@/app/main';
 
+.wrapper {
+    display: block;
+    width: 0;
+    overflow: hidden;
+    transition: width .3s;
+    // width: 250px;
+    
+    &.active {
+        width: 250px;
+        
+    }
 
-.applyBtn {
+}
+
+.container {
+    padding-right: 30px;
+    width: 250px;
+    // flex: 1;
+
+}
+
+.filterBtn {
     all: unset;
     width: 100%;
-    height: 28px;
-    background-color: black;
-    border-radius: 14px;
+    height: 30px;
+    border-radius: 15px;
     color: white;
     box-sizing: border-box;
     padding-bottom: 1px;
@@ -18,5 +37,17 @@
     font-weight: 700;
     font-size: $smallFont;
 
-    cursor: pointer;
+    border: .5px solid $someGrey;
+
+    
+    margin-bottom: 10px;
+    color: $someGrey;
+    
+    
+    &.active {
+        cursor: pointer;
+        background-color: black;
+        border: .5px solid black;
+        color: white;
+    }
 }
